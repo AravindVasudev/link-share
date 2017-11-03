@@ -44,6 +44,8 @@
             fetch('/add', fetchParams)
                 .then(res => updateURLs())
                 .catch(err => console.error(err));
+
+            url.value = group.value = '';
         });
     });
 
