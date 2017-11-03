@@ -16,7 +16,7 @@ router.post('/add', (req, res) => {
 
     const modifiedData = JSON.parse(data);
     if(!modifiedData[entry.group]) modifiedData[entry.group] = [];
-    modifiedData[entry.group].push(entry.url);
+    if(modifiedData[entry.group].indexOf(entry.url) === -1) modifiedData[entry.group].push(entry.url);
 
     fs.writeFile('./urls.json', JSON.stringify(modifiedData), (err) => {
       if (err) throw err;
