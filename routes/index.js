@@ -10,6 +10,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/add', (req, res) => {
   const entry = req.body;
+  entry.group = entry.group.trim();
 
   fs.readFile('./urls.json', 'utf8', (err, data) => {
     if (err) throw err;
@@ -29,6 +30,23 @@ router.post('/add', (req, res) => {
 router.get('/urls', (req, res) => {
   fs.readFile('./urls.json', 'utf8', (err, data) => {
     res.json(JSON.parse(data)); // I know this is dumb, but it adds Content-type automatically 😅
+  });
+});
+
+router.get('/edit', (req, res) => {
+  fs.readFile('./urls.json', 'utf8', (err, data) => {
+    res.render('edit', {data: data});
+  });
+});
+
+router.post('/edit', (req, res) => {
+  let json = req.body.JSON.trim();
+  if (!json) json = "{}";
+  
+  fs.writeFile('./urls.json', json, (err) => {
+    if (err) throw err;
+
+    res.send('Done.');
   });
 });
 
