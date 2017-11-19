@@ -1,8 +1,0 @@
-{
-  "name": "Link Share",
-  "description": "A simple url saving app",
-  "repository": "https://github.com/AravindVasudev/link-share.git",
-  "logo": "https://cdn.rawgit.com/heroku/node-js-getting-started/master/public/node.svg",
-  "keywords": ["node", "express", "url"],
-  "image": "heroku/nodejs"
-}
