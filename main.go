@@ -78,15 +78,18 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Insert into DB
-	err = coll.Insert(&url)
+	// Upsert url
+	_, err = coll.Upsert(
+		bson.M{"group": url.Group},
+		bson.M{"$push": bson.M{"urls": url.URL}},
+	)
 	if err != nil {
 		log.Fatal(err)
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	fmt.Fprintf(w, url.Group)
+	fmt.Fprintf(w, "1")
 }
 
 func urlsHandler(w http.ResponseWriter, r *http.Request) {
