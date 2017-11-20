@@ -28,16 +28,19 @@ function updateURLs() {
     fetch('/urls')
         .then(res => res.json())
         .then(data => {
-            let html = "";
-            for (const group in data) {
+            if (!data) return;
+
+            data.forEach(group => {
                 const block = document.createElement('table');
                 block.classList.add('u-full-width');
-                block.innerHTML += `<thead><th style="text-align: center;">${group}</th></thead>`;
-                for (const url of data[group]) {
+                block.innerHTML += `<thead><th style="text-align: center;">${group.group}</th></thead>`;
+                
+                group.urls.forEach(url => {
                     block.innerHTML += `<tr><td><a href="${url}" target="blank">${url}</a></td></tr>`;
-                }
+                });
+
                 urls.appendChild(block);
-            }
+            });
         });
 }
 
