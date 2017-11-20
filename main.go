@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"html/template"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"time"
 
@@ -24,6 +23,12 @@ var coll *mgo.Collection
 type addURL struct {
 	URL   string `json:"url"`
 	Group string `json:"group"`
+}
+
+// URL Document
+type urlDoc struct {
+	Group string   `json:"group"`
+	URLs  []string `json:"urls"`
 }
 
 func main() {
@@ -84,7 +89,6 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 		bson.M{"$push": bson.M{"urls": url.URL}},
 	)
 	if err != nil {
-		log.Fatal(err)
 		http.Error(w, err.Error(), 500)
 		return
 	}
@@ -93,15 +97,20 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func urlsHandler(w http.ResponseWriter, r *http.Request) {
-	link := addURL{}
-	err := coll.Find(bson.M{}).One(&link)
+	var output []urlDoc
+
+	err := coll.Find(nil).All(&output)
 	if err != nil {
-		// panic(err)
-		log.Fatal(err)
+		http.Error(w, err.Error(), 500)
+		return
 	}
 
-	fmt.Println(link)
+	data, err := json.Marshal(output)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
 
-	log.Println("urls")
-	fmt.Fprintf(w, "hello")
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintf(w, string(data))
 }
