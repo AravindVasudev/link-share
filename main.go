@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"html/template"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"gopkg.in/mgo.v2"
@@ -32,6 +34,11 @@ type urlDoc struct {
 }
 
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
+
 	var err error
 	dbCon, err = mgo.Dial("127.0.0.1:27017")
 	if err != nil {
@@ -53,7 +60,7 @@ func main() {
 
 	// Server Setup
 	server := http.Server{
-		Addr:         "127.0.0.1:3000",
+		Addr:         ":" + port,
 		Handler:      router,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
