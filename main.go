@@ -39,8 +39,13 @@ func main() {
 		log.Fatal("$PORT must be set")
 	}
 
+	dbURL := os.Getenv("DB_URL")
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
+
 	var err error
-	dbCon, err = mgo.Dial("127.0.0.1:27017")
+	dbCon, err = mgo.Dial(dbURL)
 	if err != nil {
 		panic(err)
 	}
